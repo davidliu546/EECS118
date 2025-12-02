@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "D.L2.DFS.TinyMaze",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/p1_search/catman.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}/p1_search",
+            "args": [
+                "-l", "tinyMaze",
+                "-p", "SearchAgent",
+                "-a", "fn=depthFirstSearch"
+            ]
+        }
+    ]
+
+}
+
