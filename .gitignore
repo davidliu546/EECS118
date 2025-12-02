@@ -2,5 +2,5 @@
 *.pickle
 *.pkl
 
-# Pytest cache
-.pytest_cache/
+# ignore pycache files
+__pycache__/
