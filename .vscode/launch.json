@@ -15,11 +15,11 @@
             "name": "D.L2.DFS.TinyMaze",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/p1_search/catman.py",
+            "program": "${workspaceFolder}/catman.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "stopOnEntry": false,
-            "cwd": "${workspaceFolder}/p1_search",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "-l", "tinyMaze",
                 "-p", "SearchAgent",
