@@ -1,0 +1,6 @@
+# Pacman search outputs or saved states
+*.pickle
+*.pkl
+
+# Pytest cache
+.pytest_cache/
