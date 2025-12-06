@@ -295,15 +295,20 @@ class CornersProblem(p1_Search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Initialize false for all corners
+        visited = [False, False, False, False]
+        
+        for i, corner in enumerate(self.corners):
+            if self.startingPosition == corner:
+                visited[i] = True
+        
+        # return
+        return (self.startingPosition, tuple(visited))
 
     def isGoalState(self, state: Any):
-        """
-        Returns whether this search state is a goal state of the problem.
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, visited = state
+        # check if all corners have been visited, use all() function
+        return all(visited)
 
     def getSuccessors(self, state: Any):
         """
@@ -315,17 +320,26 @@ class CornersProblem(p1_Search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
+        (x,y), visited = state
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            # Add a successor state to the successor list if the action is legal\
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
 
-            "*** YOUR CODE HERE ***"
+            # skip if wall
+            if self.walls[nextx][nexty]:
+                continue
+
+            newVisited = list(visited)
+
+            # check if new position is a corner
+            for i, corner in enumerate(self.corners):
+                if (nextx, nexty) == corner:
+                    newVisited[i] = True
+            
+            # append new state, action, and cost
+            successors.append((((nextx, nexty), tuple(newVisited)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
