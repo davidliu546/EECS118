@@ -4,3 +4,6 @@
 
 # ignore pycache files
 __pycache__/
+
+# ignore test cases folder
+test_cases/
