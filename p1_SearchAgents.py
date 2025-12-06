@@ -42,6 +42,7 @@ import util
 import time
 import p1_Search
 import catman
+from p1_Search import nullHeuristic
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -372,12 +373,38 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible.
     """
+    position, visited = state
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    
+    # list of unvisited corners
+    unvisited = []
+    for i, corner in enumerate(corners):
+        if not visited[i]:
+            unvisited.append(corner)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # if all corners visited, heuristic is 0
+    if not unvisited:
+        return 0
+    
+    # MST heuristic
+    heuristic = 0
+    current_pos = position
+    remaining = unvisited[:]     # shallow copy of unvisited corners
 
+    while remaining:
+        # find the closest corner w/ manhattan distance
+        distances = [(util.manhattanDistance(current_pos, corner), corner) for corner in remaining]
+        min_distance, closest_corner = min(distances)
+        
+        # add distance to heuristic
+        heuristic += min_distance
+        
+        # update current position and remaining corners
+        current_pos = closest_corner
+        remaining.remove(closest_corner)
+
+    return heuristic
 
 
 class AStarCornersAgent(SearchAgent):
@@ -466,8 +493,22 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    foodList = foodGrid.asList()
+
+    if not foodList:
+        return 0
+
+    # Use cached mazeDistance if available
+    maxDist = 0
+    # iterate over remaining food
+    for food in foodList:
+        # create a key for caching
+        key = (position, food)
+        if key not in problem.heuristicInfo:
+            problem.heuristicInfo[key] = mazeDistance(position, food, problem.startingGameState)
+        maxDist = max(maxDist, problem.heuristicInfo[key])
+    
+    return maxDist
 
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -498,8 +539,9 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # use BFS
+        path = p1_Search.bfs(problem)
+        return path
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -533,9 +575,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food[x][y]
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: catman.GameState) -> int:
     """
